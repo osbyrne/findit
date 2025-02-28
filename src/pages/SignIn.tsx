@@ -55,10 +55,14 @@ const SignIn = () => {
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>Demo credentials for testing:</p>
         <p className="font-mono bg-muted p-2 rounded mt-1">
+<<<<<<< HEAD
           demo@example.com
         </p>        
         <p className="font-mono bg-muted p-2 rounded mt-1">
           password123
+=======
+          Email: demo@example.com | Password: password123
+>>>>>>> ab5822a7efa355af19d95ae93f388fd4a2bda70f
         </p>
       </div>
     </div>
