@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Upload, Download } from "lucide-react";
 import { db, Note } from "@/lib/db";
 import NoteList from "@/components/NoteList";
 import NoteForm from "@/components/NoteForm";
@@ -12,6 +12,7 @@ const Index = () => {
   const [showForm, setShowForm] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<Note | undefined>(undefined);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Fetch all notes sorted by updatedAt descending
   const notes = useLiveQuery(
@@ -43,11 +44,17 @@ const Index = () => {
     try {
       if (note.id) {
         // Update existing note
-        await db.notes.update(note.id, note);
+        await db.notes.update(note.id, {
+          ...note,
+          synced: false // Mark as not synced
+        });
         toast.success("Note updated successfully");
       } else {
         // Add new note
-        await db.notes.add(note);
+        await db.notes.add({
+          ...note,
+          synced: false // Mark as not synced
+        });
         toast.success("Note created successfully");
       }
       setShowForm(false);
@@ -73,6 +80,38 @@ const Index = () => {
     setNoteToEdit(undefined);
   };
 
+  const handlePushToServer = async () => {
+    setIsSyncing(true);
+    try {
+      const result = await db.pushNotesToServer();
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(`Sync failed: ${error.message}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handlePullFromServer = async () => {
+    setIsSyncing(true);
+    try {
+      const result = await db.pullNotesFromServer();
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(`Sync failed: ${error.message}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   if (!notes) {
     return (
       <div className="flex justify-center items-center min-h-[70vh]">
@@ -86,21 +125,51 @@ const Index = () => {
       <header className="mb-8">
         <div className="flex justify-between items-center">
           <div>
-            <span className="inline-block px-2.5 py-1 bg-secondary text-secondary-foreground text-xs font-medium rounded-full mb-2">
-              Local Storage
-            </span>
+            <div className="flex space-x-2 mb-2">
+              <span className="inline-block px-2.5 py-1 bg-secondary text-secondary-foreground text-xs font-medium rounded-full">
+                Local Storage
+              </span>
+              <span className="inline-block px-2.5 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 text-xs font-medium rounded-full">
+                Supabase Sync
+              </span>
+            </div>
             <h1 className="text-3xl font-medium tracking-tight">My Notes</h1>
           </div>
           
-          {notes.length > 0 && !showForm && (
-            <button
-              onClick={handleAddNote}
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              <PlusCircle size={18} />
-              <span>New Note</span>
-            </button>
-          )}
+          <div className="flex items-center space-x-3">
+            {!showForm && (
+              <>
+                <button
+                  onClick={handlePushToServer}
+                  disabled={isSyncing}
+                  className="btn-secondary inline-flex items-center gap-2"
+                  title="Push notes to server"
+                >
+                  <Upload size={18} />
+                  <span className="hidden sm:inline">Push to Server</span>
+                </button>
+                <button
+                  onClick={handlePullFromServer}
+                  disabled={isSyncing}
+                  className="btn-secondary inline-flex items-center gap-2"
+                  title="Pull notes from server"
+                >
+                  <Download size={18} />
+                  <span className="hidden sm:inline">Pull from Server</span>
+                </button>
+              </>
+            )}
+            
+            {notes.length > 0 && !showForm && (
+              <button
+                onClick={handleAddNote}
+                className="btn-primary inline-flex items-center gap-2"
+              >
+                <PlusCircle size={18} />
+                <span>New Note</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -125,7 +194,7 @@ const Index = () => {
       </main>
 
       <footer className="text-center text-sm text-muted-foreground">
-        <p>Notes are stored locally in your browser's IndexedDB</p>
+        <p>Notes are stored locally and can be synchronized with Supabase</p>
       </footer>
     </div>
   );

@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, CloudOff, Check } from "lucide-react";
 import { Note } from "@/lib/db";
 import { formatDistanceToNow } from "date-fns";
 
@@ -30,9 +30,21 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="flex justify-between items-start mb-2">
-        <h3 className="font-medium text-lg text-foreground">
-          {truncate(note.title, 40)}
-        </h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium text-lg text-foreground">
+            {truncate(note.title, 40)}
+          </h3>
+          {note.synced === false && (
+            <span title="Not synced with server" className="text-yellow-500">
+              <CloudOff size={16} />
+            </span>
+          )}
+          {note.synced === true && (
+            <span title="Synced with server" className="text-green-500">
+              <Check size={16} />
+            </span>
+          )}
+        </div>
         <div className={`flex space-x-2 transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
           <button 
             onClick={() => onEdit(note)} 
