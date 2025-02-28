@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { db } from "@/lib/db";
 import { toast } from "sonner";
+import { LogIn, UserPlus } from "lucide-react";
 
 interface AuthFormProps {
   onSignedIn: () => void;
@@ -42,8 +43,18 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="glass-card rounded-xl p-8 shadow-sm">
-        <h2 className="text-2xl font-medium mb-6">
-          {isSignUp ? "Create Account" : "Sign In"}
+        <h2 className="text-2xl font-medium mb-6 flex items-center">
+          {isSignUp ? (
+            <>
+              <UserPlus className="mr-2 h-5 w-5" />
+              Create Account
+            </>
+          ) : (
+            <>
+              <LogIn className="mr-2 h-5 w-5" />
+              Sign In
+            </>
+          )}
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -104,10 +115,6 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
           </button>
         </p>
       </div>
-      
-      <p className="mt-6 text-center text-xs text-muted-foreground">
-        Note: For testing purposes, email verification might be disabled in Supabase.
-      </p>
     </div>
   );
 };

@@ -5,14 +5,14 @@ import { User } from '@supabase/supabase-js';
 
 // Define the interface for our Note object
 export interface Note {
-  id?: number;
+  id: number;
   title: string;
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  synced?: boolean;
+  synced: boolean;
   serverNoteId?: string;
-  userId?: string;
+  userId: string;
 }
 
 // Create a Dexie database class
