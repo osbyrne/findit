@@ -1,6 +1,7 @@
 
 import Dexie, { Table } from 'dexie';
 import { supabase } from "@/integrations/supabase/client";
+import { User } from '@supabase/supabase-js';
 
 // Define the interface for our Note object
 export interface Note {
@@ -11,22 +12,42 @@ export interface Note {
   updatedAt: Date;
   synced?: boolean;
   serverNoteId?: string;
+  userId?: string;
 }
 
 // Create a Dexie database class
 class NotesDatabase extends Dexie {
   notes!: Table<Note, number>;
+  currentUser: User | null = null;
 
   constructor() {
     super('notesDatabase');
-    this.version(1).stores({
-      notes: '++id, title, content, createdAt, updatedAt, synced, serverNoteId'
+    this.version(2).stores({
+      notes: '++id, title, content, createdAt, updatedAt, synced, serverNoteId, userId'
+    });
+    
+    // Initialize current user
+    this.initAuthState();
+  }
+
+  async initAuthState() {
+    // Get current session
+    const { data: { session } } = await supabase.auth.getSession();
+    this.currentUser = session?.user || null;
+
+    // Set up auth state change listener
+    supabase.auth.onAuthStateChange((_event, session) => {
+      this.currentUser = session?.user || null;
     });
   }
 
   // Push all local notes to Supabase
   async pushNotesToServer(): Promise<{ success: boolean; message: string }> {
     try {
+      if (!this.currentUser) {
+        return { success: false, message: "You must be logged in to sync notes" };
+      }
+
       const allNotes = await this.notes.toArray();
       
       // Process each note
@@ -38,7 +59,8 @@ class NotesDatabase extends Dexie {
             .update({
               title: note.title,
               content: note.content,
-              updated_at: note.updatedAt.toISOString()
+              updated_at: note.updatedAt.toISOString(),
+              user_id: this.currentUser.id
             })
             .eq('id', note.serverNoteId);
           
@@ -51,7 +73,8 @@ class NotesDatabase extends Dexie {
               title: note.title,
               content: note.content,
               created_at: note.createdAt.toISOString(),
-              updated_at: note.updatedAt.toISOString()
+              updated_at: note.updatedAt.toISOString(),
+              user_id: this.currentUser.id
             })
             .select()
             .single();
@@ -62,6 +85,7 @@ class NotesDatabase extends Dexie {
           if (data && note.id) {
             await this.notes.update(note.id, {
               serverNoteId: data.id,
+              userId: this.currentUser.id,
               synced: true
             });
           }
@@ -78,7 +102,11 @@ class NotesDatabase extends Dexie {
   // Pull all notes from Supabase
   async pullNotesFromServer(): Promise<{ success: boolean; message: string }> {
     try {
-      // Get all notes from server
+      if (!this.currentUser) {
+        return { success: false, message: "You must be logged in to sync notes" };
+      }
+
+      // Get all notes from server for current user
       const { data: serverNotes, error } = await supabase
         .from('notes')
         .select('*')
@@ -109,6 +137,7 @@ class NotesDatabase extends Dexie {
             title: serverNote.title,
             content: serverNote.content,
             updatedAt: new Date(serverNote.updated_at),
+            userId: serverNote.user_id,
             synced: true
           });
         } else {
@@ -119,6 +148,7 @@ class NotesDatabase extends Dexie {
             createdAt: new Date(serverNote.created_at),
             updatedAt: new Date(serverNote.updated_at),
             serverNoteId: serverNote.id,
+            userId: serverNote.user_id,
             synced: true
           });
         }
@@ -127,6 +157,100 @@ class NotesDatabase extends Dexie {
       return { success: true, message: "Notes pulled from server successfully" };
     } catch (error: any) {
       console.error("Error pulling notes from server:", error);
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Sign up a new user
+  async signUp(email: string, password: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) throw new Error(error.message);
+      
+      return { 
+        success: true, 
+        message: data.user ? "Signed up successfully" : "Please check your email to confirm your account" 
+      };
+    } catch (error: any) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Sign in an existing user
+  async signIn(email: string, password: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw new Error(error.message);
+      
+      return { success: true, message: "Signed in successfully" };
+    } catch (error: any) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Sign out the current user
+  async signOut(): Promise<{ success: boolean; message: string }> {
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) throw new Error(error.message);
+      
+      return { success: true, message: "Signed out successfully" };
+    } catch (error: any) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Get current user
+  getCurrentUser(): User | null {
+    return this.currentUser;
+  }
+
+  // Update user profile
+  async updateProfile(displayName: string): Promise<{ success: boolean; message: string }> {
+    try {
+      if (!this.currentUser) {
+        return { success: false, message: "You must be logged in to update your profile" };
+      }
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({ display_name: displayName })
+        .eq('id', this.currentUser.id);
+
+      if (error) throw new Error(error.message);
+      
+      return { success: true, message: "Profile updated successfully" };
+    } catch (error: any) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  // Get user profile
+  async getProfile(): Promise<{ success: boolean; data?: any; message: string }> {
+    try {
+      if (!this.currentUser) {
+        return { success: false, message: "You must be logged in to view your profile" };
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', this.currentUser.id)
+        .single();
+
+      if (error) throw new Error(error.message);
+      
+      return { success: true, data, message: "Profile retrieved successfully" };
+    } catch (error: any) {
       return { success: false, message: error.message };
     }
   }

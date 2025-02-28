@@ -6,7 +6,10 @@ import { db, Note } from "@/lib/db";
 import NoteList from "@/components/NoteList";
 import NoteForm from "@/components/NoteForm";
 import EmptyState from "@/components/EmptyState";
+import AuthForm from "@/components/AuthForm";
+import ProfileCard from "@/components/ProfileCard";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [showForm, setShowForm] = useState(false);
