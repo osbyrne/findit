@@ -112,7 +112,9 @@ class NotesDatabase extends Dexie {
         .select('*')
         .order('updated_at', { ascending: false });
       
-      if (error) throw new Error(`Failed to fetch notes: ${error.message}`);
+      if (error) {
+        throw new Error(`Failed to pull notes from server: ${error.message}`);
+      }
       
       if (!serverNotes) {
         return { success: true, message: "No notes found on server" };
