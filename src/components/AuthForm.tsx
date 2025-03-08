@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { db } from "@/lib/db";
 import { toast } from "sonner";
@@ -119,4 +118,4 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
   );
 };
 
-export default AuthForm;
+export {AuthForm};

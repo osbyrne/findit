@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { PlusCircle, Upload, Download } from "lucide-react";
 import { db, Note } from "@/lib/db";
-import NoteList from "@/components/NoteList";
-import NoteForm from "@/components/NoteForm";
-import EmptyState from "@/components/EmptyState";
-import AuthForm from "@/components/AuthForm";
-import ProfileCard from "@/components/ProfileCard";
+import { NoteList } from "@/components/NoteList";
+import { NoteForm } from "@/components/NoteForm";
+import { EmptyState } from "@/components/EmptyState";
+import { AuthForm } from "@/components/AuthForm";
+import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -27,7 +27,6 @@ const Index = () => {
   );
 
   useEffect(() => {
-    // Only show initial load animation once
     if (notes && isInitialLoad) {
       setIsInitialLoad(false);
     }
@@ -203,4 +202,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export {Index};

@@ -4,8 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Index from "./pages/Index";
-import SignIn from "./pages/SignIn";
+import {Index} from "./pages/Index";
+import { SignIn}  from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 import { db } from "./lib/db";
@@ -70,4 +70,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App;
+export {};

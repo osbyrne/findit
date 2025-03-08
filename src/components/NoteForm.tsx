@@ -109,4 +109,4 @@ const NoteForm = ({ noteToEdit, onSave, onCancel }: NoteFormProps) => {
   );
 };
 
-export default NoteForm;
+export {NoteForm} ;

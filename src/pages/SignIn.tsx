@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "@/lib/db";
-import AuthForm from "@/components/AuthForm";
+import {AuthForm} from "@/components/AuthForm";
 import { Lock } from "lucide-react";
 
 const SignIn = () => {
@@ -65,4 +65,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export { SignIn };

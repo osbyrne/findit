@@ -38,4 +38,4 @@ const EmptyState = ({ onCreateNew }: EmptyStateProps) => {
   );
 };
 
-export default EmptyState;
+export {EmptyState} ;

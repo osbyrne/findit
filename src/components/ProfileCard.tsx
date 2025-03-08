@@ -127,4 +127,4 @@ const ProfileCard = ({ onSignOut }: ProfileCardProps) => {
   );
 };
 
-export default ProfileCard;
+export {ProfileCard};

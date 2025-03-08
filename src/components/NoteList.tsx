@@ -23,4 +23,4 @@ const NoteList = ({ notes, onEdit, onDelete }: NoteListProps) => {
   );
 };
 
-export default NoteList;
+export {NoteList};
