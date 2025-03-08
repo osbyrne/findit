@@ -74,4 +74,4 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
   );
 };
 
-export default NoteCard;
+export { NoteCard};

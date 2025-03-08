@@ -1,6 +1,6 @@
 
 import { Note } from "@/lib/db";
-import NoteCard from "./NoteCard";
+import {NoteCard} from "./NoteCard";
 
 interface NoteListProps {
   notes: Note[];
