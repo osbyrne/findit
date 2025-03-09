@@ -200,11 +200,7 @@ class NotesDatabase extends Dexie {
   // Sign out the current user
   async signOut(): Promise<{ success: boolean; message: string }> {
     try {
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) throw new Error(error.message);
-      
-      return { success: true, message: "Signed out successfully" };
+        this.currentUser = null;
     } catch (error: any) {
       return { success: false, message: error.message };
     }

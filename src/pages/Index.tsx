@@ -6,6 +6,7 @@ import { NoteList } from "@/components/NoteList";
 import { NoteForm } from "@/components/NoteForm";
 import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const Index = () => {
   const [showForm, setShowForm] = useState(false);
@@ -118,80 +119,83 @@ const Index = () => {
     );
   }
 
-  return (
+return (
     <div className="container max-w-6xl py-12 px-4 sm:px-6 lg:px-8 mx-auto min-h-screen">
-      <header className="mb-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <div className="flex space-x-2 mb-2">
-              <span className="inline-block px-2.5 py-1 bg-secondary text-secondary-foreground text-xs font-medium rounded-full">
-                Local Storage
-              </span>
-              <span className="inline-block px-2.5 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 text-xs font-medium rounded-full">
-                Supabase Sync
-              </span>
+        <header className="mb-8">
+            <div className="flex justify-between items-center">          
+                <div className="flex items-center space-x-3">
+                    {!showForm && (
+                        <>
+                            <button
+                                onClick={handlePushToServer}
+                                disabled={isSyncing}
+                                className="btn btn-secondary btn-sm inline-flex items-center gap-2"
+                                title="Push notes to server"
+                            >
+                                <Upload size={18} />
+                                <span className="hidden sm:inline">Push to Server</span>
+                            </button>
+                            <button
+                                onClick={handlePullFromServer}
+                                disabled={isSyncing}
+                                className="btn btn-secondary btn-sm inline-flex items-center gap-2"
+                                title="Pull notes from server"
+                            >
+                                <Download size={18} />
+                                <span className="hidden sm:inline">Pull from Server</span>
+                            </button>
+                        </>
+                    )}
+                    
+                    {notes.length > 0 && !showForm && (
+                        <button
+                            onClick={handleAddNote}
+                            className="btn btn-primary btn-sm inline-flex items-center gap-2"
+                        >
+                            <PlusCircle size={18} />
+                            <span>New Note</span>
+                        </button>
+                    )}
+                </div>
+                
+                <button
+                    onClick={
+                        () => {
+                            db.signOut();
+                            Cookies.remove("findit_auth");
+                            window.location.href = "/";
+                    }}
+                    className="btn btn-error btn-outline"
+                >
+                    Logout
+                </button>
             </div>
-            <h1 className="text-3xl font-medium tracking-tight">My Notes</h1>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            {!showForm && (
-              <>
-                <button
-                  onClick={handlePushToServer}
-                  disabled={isSyncing}
-                  className="btn-secondary inline-flex items-center gap-2"
-                  title="Push notes to server"
-                >
-                  <Upload size={18} />
-                  <span className="hidden sm:inline">Push to Server</span>
-                </button>
-                <button
-                  onClick={handlePullFromServer}
-                  disabled={isSyncing}
-                  className="btn-secondary inline-flex items-center gap-2"
-                  title="Pull notes from server"
-                >
-                  <Download size={18} />
-                  <span className="hidden sm:inline">Pull from Server</span>
-                </button>
-              </>
-            )}
-            
-            {notes.length > 0 && !showForm && (
-              <button
-                onClick={handleAddNote}
-                className="btn-primary inline-flex items-center gap-2"
-              >
-                <PlusCircle size={18} />
-                <span>New Note</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="mb-12">
-        {showForm ? (
-          <div className="glass-card rounded-xl p-6 shadow-sm">
-            <NoteForm
-              noteToEdit={noteToEdit}
-              onSave={handleSaveNote}
-              onCancel={handleCancelForm}
-            />
-          </div>
-        ) : notes.length === 0 ? (
-          <EmptyState onCreateNew={handleAddNote} />
-        ) : (
-          <NoteList
-            notes={notes}
-            onEdit={handleEditNote}
-            onDelete={handleDeleteNote}
-          />
-        )}
-      </main>
+        <main className="mb-12">
+            {showForm ? (
+                <div className="glass-card rounded-xl p-6 shadow-sm">
+                    <NoteForm
+                        noteToEdit={noteToEdit}
+                        onSave={handleSaveNote}
+                        onCancel={handleCancelForm}
+                    />
+                </div>
+            ) : notes.length === 0 ? (
+                <EmptyState onCreateNew={handleAddNote} />
+            ) : (
+                <NoteList
+                    notes={notes}
+                    onEdit={handleEditNote}
+                    onDelete={handleDeleteNote}
+                />
+            )}
+        </main>
+        <footer>
+            <div>current user email : {db.currentUser?.email || 'Not logged in'}</div>
+        </footer>
     </div>
-  );
+);
 };
 
 export {Index};
