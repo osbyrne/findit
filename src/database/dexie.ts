@@ -39,7 +39,6 @@ class NotesDatabase extends Dexie {
     });
   }
 
-  // Push all local notes to Supabase
   async pushNotesToServer(): Promise<{ success: boolean; message: string }> {
     try {
       if (!this.currentUser) {
@@ -48,10 +47,8 @@ class NotesDatabase extends Dexie {
 
       const allNotes = await this.notes.toArray();
       
-      // Process each note
       for (const note of allNotes) {
         if (note.serverNoteId) {
-          // Update existing note on server
           const { error } = await supabase
             .from('notes')
             .update({
@@ -64,7 +61,6 @@ class NotesDatabase extends Dexie {
           
           if (error) throw new Error(`Failed to update note: ${error.message}`);
         } else {
-          // Create new note on server
           const { data, error } = await supabase
             .from('notes')
             .insert({
@@ -79,7 +75,6 @@ class NotesDatabase extends Dexie {
           
           if (error) throw new Error(`Failed to create note: ${error.message}`);
           
-          // Update local note with server ID
           if (data && note.id) {
             await this.notes.update(note.id, {
               serverNoteId: data.id,

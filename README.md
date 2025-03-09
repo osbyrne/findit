@@ -10,3 +10,4 @@ TODO :
 - add photo upload
 - add creator username for every item
 - make mobile-first
+- manage RLS on supabase

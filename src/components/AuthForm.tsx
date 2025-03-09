@@ -2,6 +2,7 @@ import { useState } from "react";
 import { db } from "@/database/dexie";
 import { toast } from "sonner";
 import { LogIn, UserPlus } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface UserData {
     email: string;
@@ -100,23 +101,25 @@ const InputField = ({
 );
 
 const SubmitButton = ({ isLoading, isSignUp }: { isLoading: boolean; isSignUp: boolean }) => (
-    <button
+    <Button
         type="submit"
-        className="btn btn-primary w-full flex justify-center items-center"
         disabled={isLoading}
     >
         {isLoading ? (
             <span className="loading loading-spinner loading-sm"></span>
         ) : isSignUp ? (
             "Sign Up"
-        ) : (
+        )
+        : (
             "Sign In"
         )}
-    </button>
+    </Button>
 );
 
 const ToggleAuthMode = ({ isSignUp, onToggle }: { isSignUp: boolean; onToggle: () => void }) => (
-    <p className="mt-4 text-center text-sm text-base-content/60">
+    <p className="
+    mt-4 text-center text-sm text-base-content/60 flex items-center justify-center
+    ">
         {isSignUp ? "Already have an account?" : "Don't have an account?"}
         <button
             onClick={onToggle}
