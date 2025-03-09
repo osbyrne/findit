@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { User, LogOut, Save } from "lucide-react";
-import { db } from "@/lib/db";
+import { db } from "@/database/dexie";
 import { toast } from "sonner";
 
 interface ProfileCardProps {

@@ -2,14 +2,11 @@
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { PlusCircle, Upload, Download } from "lucide-react";
-import { db, Note } from "@/lib/db";
+import { db, Note } from "@/database/dexie";
 import { NoteList } from "@/components/NoteList";
 import { NoteForm } from "@/components/NoteForm";
 import { EmptyState } from "@/components/EmptyState";
-import { AuthForm } from "@/components/AuthForm";
-import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [showForm, setShowForm] = useState(false);

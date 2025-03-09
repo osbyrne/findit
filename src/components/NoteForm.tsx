@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { Note } from "@/lib/db";
+import { Note } from "@/types";
 import { toast } from "sonner";
 
 interface NoteFormProps {

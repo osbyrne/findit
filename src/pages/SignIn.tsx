@@ -1,9 +1,12 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "@/lib/db";
+import { db } from "@/database/dexie";
 import {AuthForm} from "@/components/AuthForm";
 import { Lock } from "lucide-react";
+import Cookies from "js-cookie";
+
+const AUTH_COOKIE_NAME = "findit_auth";
+const COOKIE_EXPIRY_DAYS = 7;
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -13,6 +16,24 @@ const SignIn = () => {
     // Check if user is already logged in
     const checkAuthStatus = async () => {
       setIsLoading(true);
+      
+      // First check for auth cookie
+      const authCookie = Cookies.get(AUTH_COOKIE_NAME);
+      if (authCookie) {
+        try {
+          const userData = JSON.parse(authCookie);
+          // Restore user session from cookie
+          await db.restoreUserSession(userData);
+          navigate("/");
+          return;
+        } catch (error) {
+          // Invalid cookie, remove it
+          Cookies.remove(AUTH_COOKIE_NAME);
+          console.error("Failed to restore session from cookie:", error);
+        }
+      }
+      
+      // Fallback to regular session check
       const currentUser = db.getCurrentUser();
       
       if (currentUser) {
@@ -26,7 +47,13 @@ const SignIn = () => {
     checkAuthStatus();
   }, [navigate]);
 
-  const handleSignedIn = () => {
+  const handleSignedIn = (userData) => {
+    // Save user data in cookie for persistent login
+    Cookies.set(AUTH_COOKIE_NAME, JSON.stringify(userData), { 
+      expires: COOKIE_EXPIRY_DAYS,
+      sameSite: 'strict'
+    });
+    
     navigate("/");
   };
 

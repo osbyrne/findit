@@ -7,7 +7,7 @@ import {Index} from "./pages/Index";
 import { SignIn}  from "./pages/SignIn";
 import {NotFound} from "./pages/NotFound";
 import { useEffect, useState } from "react";
-import { db } from "./lib/db";
+import { db } from "@/database/dexie";
 import { supabase } from "./integrations/supabase/client";
 
 const queryClient = new QueryClient();

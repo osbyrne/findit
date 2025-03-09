@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Edit2, Trash2, CloudOff, Check } from "lucide-react";
-import { Note } from "@/lib/db";
+import { Note } from "@/types";
 import { formatDistanceToNow } from "date-fns";
 
 interface NoteCardProps {

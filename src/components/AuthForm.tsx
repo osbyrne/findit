@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { db } from "@/lib/db";
+import { db } from "@/database/dexie";
 import { toast } from "sonner";
 import { LogIn, UserPlus } from "lucide-react";
 
 interface AuthFormProps {
-  onSignedIn: () => void;
+    onSignedIn: (userData: any) => void;
 }
 
 const AuthForm = ({ onSignedIn }: AuthFormProps) => {

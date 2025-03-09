@@ -1,5 +1,5 @@
 
-import { Note } from "@/lib/db";
+import { Note } from "@/types";
 import {NoteCard} from "./NoteCard";
 
 interface NoteListProps {

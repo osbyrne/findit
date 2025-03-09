@@ -236,6 +236,10 @@ class NotesDatabase extends Dexie {
     }
   }
 
+  async restoreUserSession(userData: User): Promise<void> {
+    this.currentUser = userData;
+  }
+
   // Get user profile
   async getProfile(): Promise<{ success: boolean; data?: any; message: string }> {
     try {
