@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Note } from "@/types";

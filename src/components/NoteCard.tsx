@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Edit2, Trash2, CloudOff, Check } from "lucide-react";
 import { Note } from "@/types";

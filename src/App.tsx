@@ -3,12 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import {Index} from "./pages/Index";
-import { SignIn}  from "./pages/SignIn";
-import {NotFound} from "./pages/NotFound";
+import {Index} from "@/pages/Index";
+import { SignIn}  from "@/pages/SignIn";
+import {NotFound} from "@/pages/NotFound";
 import { useEffect, useState } from "react";
 import { db } from "@/database/dexie";
-import { supabase } from "./integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
