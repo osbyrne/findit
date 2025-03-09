@@ -47,15 +47,19 @@ const SignIn = () => {
     checkAuthStatus();
   }, [navigate]);
 
-  const handleSignedIn = (userData) => {
-    // Save user data in cookie for persistent login
+interface UserData {
+    email: string;
+    userId: string;
+}
+
+const handleSignedIn = (userData: UserData): void => {
     Cookies.set(AUTH_COOKIE_NAME, JSON.stringify(userData), { 
-      expires: COOKIE_EXPIRY_DAYS,
-      sameSite: 'strict'
+        expires: COOKIE_EXPIRY_DAYS,
+        sameSite: 'strict'
     });
     
     navigate("/");
-  };
+};
 
   if (isLoading) {
     return (
