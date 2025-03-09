@@ -1,21 +1,19 @@
-
 import Dexie, { Table } from 'dexie';
 import { supabase } from "@/integrations/supabase/client";
 import { User } from '@supabase/supabase-js';
 
-// Define the interface for our Note object
 export interface Note {
-  id?: number;
+  id: number;
   title: string;
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  synced?: boolean;
-  serverNoteId?: string;
-  userId?: string;
+  synced: boolean;
+  serverNoteId: string;
+  localNoteId: number;
+  userId: string;
 }
 
-// Create a Dexie database class
 class NotesDatabase extends Dexie {
   notes!: Table<Note, number>;
   currentUser: User | null = null;
@@ -145,13 +143,14 @@ class NotesDatabase extends Dexie {
         } else {
           // Create new local note
           await this.notes.add({
-            title: serverNote.title,
-            content: serverNote.content,
-            createdAt: new Date(serverNote.created_at),
-            updatedAt: new Date(serverNote.updated_at),
-            serverNoteId: serverNote.id,
-            userId: serverNote.user_id,
-            synced: true
+                id: 9, //bruh
+                title: serverNote.title,
+                content: serverNote.content,
+                createdAt: new Date(serverNote.created_at),
+                updatedAt: new Date(serverNote.updated_at),
+                serverNoteId: serverNote.id,
+                userId: serverNote.user_id,
+                synced: true
           });
         }
       }

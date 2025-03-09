@@ -3,8 +3,13 @@ import { db } from "@/database/dexie";
 import { toast } from "sonner";
 import { LogIn, UserPlus } from "lucide-react";
 
+interface UserData {
+    email: string;
+    id: string;
+}
+
 interface AuthFormProps {
-    onSignedIn: (userData: any) => void;
+    onSignedIn: (userData: UserData) => void;
 }
 
 const AuthForm = ({ onSignedIn }: AuthFormProps) => {
@@ -18,7 +23,11 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
     setIsLoading(true);
 
     try {
-      let result;
+    interface AuthResult {
+      success: boolean;
+      message: string;
+    }
+    let result: AuthResult;
       
       if (isSignUp) {
         result = await db.signUp(email, password);
@@ -28,7 +37,7 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
 
       if (result.success) {
         toast.success(result.message);
-        onSignedIn();
+        onSignedIn({ email, id: email }); // Using email as id for now
       } else {
         toast.error(result.message);
       }
@@ -39,83 +48,120 @@ const AuthForm = ({ onSignedIn }: AuthFormProps) => {
     }
   };
 
-  return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="glass-card rounded-xl p-8 shadow-sm">
-        <h2 className="text-2xl font-medium mb-6 flex items-center">
-          {isSignUp ? (
+// Create separate components first
+const AuthHeader = ({ isSignUp }: { isSignUp: boolean }) => (
+    <h2 className="text-2xl font-medium mb-6 flex items-center">
+        {isSignUp ? (
             <>
-              <UserPlus className="mr-2 h-5 w-5" />
-              Create Account
+                <UserPlus className="mr-2 h-5 w-5" />
+                Create Account
             </>
-          ) : (
+        ) : (
             <>
-              <LogIn className="mr-2 h-5 w-5" />
-              Sign In
+                <LogIn className="mr-2 h-5 w-5" />
+                Sign In
             </>
-          )}
-        </h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-              required
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-              required
-              minLength={6}
-            />
-          </div>
-          
-          <button
-            type="submit"
-            className="btn-primary w-full flex justify-center items-center"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            ) : isSignUp ? (
-              "Sign Up"
-            ) : (
-              "Sign In"
-            )}
-          </button>
-        </form>
-        
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="ml-1 text-primary hover:underline"
-            type="button"
-          >
-            {isSignUp ? "Sign In" : "Sign Up"}
-          </button>
-        </p>
-      </div>
+        )}
+    </h2>
+);
+
+const InputField = ({
+    id,
+    type,
+    value,
+    onChange,
+    label,
+    placeholder,
+    minLength,
+}: {
+    id: string;
+    type: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    label: string;
+    placeholder: string;
+    minLength?: number;
+}) => (
+    <div className="space-y-2">
+        <label htmlFor={id} className="block text-sm font-medium">
+            {label}
+        </label>
+        <input
+            id={id}
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="input input-bordered w-full"
+            required
+            minLength={minLength}
+        />
     </div>
-  );
+);
+
+const SubmitButton = ({ isLoading, isSignUp }: { isLoading: boolean; isSignUp: boolean }) => (
+    <button
+        type="submit"
+        className="btn btn-primary w-full flex justify-center items-center"
+        disabled={isLoading}
+    >
+        {isLoading ? (
+            <span className="loading loading-spinner loading-sm"></span>
+        ) : isSignUp ? (
+            "Sign Up"
+        ) : (
+            "Sign In"
+        )}
+    </button>
+);
+
+const ToggleAuthMode = ({ isSignUp, onToggle }: { isSignUp: boolean; onToggle: () => void }) => (
+    <p className="mt-4 text-center text-sm text-base-content/60">
+        {isSignUp ? "Already have an account?" : "Don't have an account?"}
+        <button
+            onClick={onToggle}
+            className="ml-1 btn btn-link btn-sm text-primary"
+            type="button"
+        >
+            {isSignUp ? "Sign In" : "Sign Up"}
+        </button>
+    </p>
+);
+
+return (
+    <div className="w-full max-w-md mx-auto">
+        <div className="card bg-base-100 rounded-xl p-8 shadow-sm">
+            <AuthHeader isSignUp={isSignUp} />
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <InputField
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    label="Email"
+                    placeholder="Enter your email"
+                />
+                
+                <InputField
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    label="Password"
+                    placeholder="Enter your password"
+                    minLength={6}
+                />
+                
+                <SubmitButton isLoading={isLoading} isSignUp={isSignUp} />
+            </form>
+            
+            <ToggleAuthMode isSignUp={isSignUp} onToggle={() => setIsSignUp(!isSignUp)} />
+        </div>
+    </div>
+);
 };
 
-export {AuthForm};
+export { AuthForm };
+export type { UserData };
+

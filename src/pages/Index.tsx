@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { PlusCircle, Upload, Download } from "lucide-react";
@@ -191,10 +190,6 @@ const Index = () => {
           />
         )}
       </main>
-
-      <footer className="text-center text-sm text-muted-foreground">
-        <p>Notes are stored locally and can be synchronized with Supabase</p>
-      </footer>
     </div>
   );
 };

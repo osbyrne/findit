@@ -12,7 +12,7 @@ const ProfileCard = ({ onSignOut }: ProfileCardProps) => {
   const [displayName, setDisplayName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<{ display_name?: string } | null>(null);
 
   useEffect(() => {
     fetchProfile();

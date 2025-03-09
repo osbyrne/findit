@@ -36,9 +36,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (isAuthenticated === null) {
     // Still loading
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent" />
-      </div>
+        <div className="h-screen flex items-center justify-center">
+            <span className="loading loading-spinner loading-md"></span>
+        </div>
     );
   }
   
