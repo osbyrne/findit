@@ -11,3 +11,5 @@ TODO :
 - add creator username for every item
 - make mobile-first
 - manage RLS on supabase
+- normalize items.csv (exported from google sheets)
+- add items.csv to supabase, with corresponding Prisma, TypeScript interface and React component
