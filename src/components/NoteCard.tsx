@@ -69,9 +69,6 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
       <div className="text-xs text-muted-foreground flex items-center mt-auto">
         <span>Updated {formattedDate}</span>
       </div>
-      <div className="text-xs text-muted-foreground mb-2">
-        User ID: {note.userId || "no user ID"}
-    </div>
     </div>
   );
 };
