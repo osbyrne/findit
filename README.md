@@ -2,6 +2,10 @@
 
 Findit is a program we're making to help hospital folks find medical items in hazardous storage rooms. 
 
+To run this repository, you will need :
+- Bun
+- Google Chrome
+
 TODO :
 - add profile page
 - installable on mobile as progressive web app
