@@ -9,6 +9,8 @@ import {NotFound} from "@/pages/NotFound";
 import { useEffect, useState } from "react";
 import { db } from "@/database/dexie";
 import { supabase } from "@/integrations/supabase/client";
+import { AddNote } from "@/pages/AddNote";
+import { Profile } from "@/pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +62,30 @@ const App = () => (
                 <Index />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/add-note" 
+            element={
+              <ProtectedRoute>
+                <AddNote />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/edit-note/:id" 
+            element={
+              <ProtectedRoute>
+                <AddNote />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

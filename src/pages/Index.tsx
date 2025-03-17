@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { PlusCircle, Upload, Download } from "lucide-react";
+import { PlusCircle, Upload, Download, User } from "lucide-react";
 import { db, Note } from "@/database/dexie";
 import { NoteList } from "@/components/NoteList";
-import { NoteForm } from "@/components/NoteForm";
 import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [noteToEdit, setNoteToEdit] = useState<Note | undefined>(undefined);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch all notes sorted by updatedAt descending
   const notes = useLiveQuery(
@@ -30,38 +29,11 @@ const Index = () => {
   }, [notes, isInitialLoad]);
 
   const handleAddNote = () => {
-    setNoteToEdit(undefined);
-    setShowForm(true);
+    navigate("/add-note");
   };
 
   const handleEditNote = (note: Note) => {
-    setNoteToEdit(note);
-    setShowForm(true);
-  };
-
-  const handleSaveNote = async (note: Note) => {
-    try {
-      if (note.id) {
-        // Update existing note
-        await db.notes.update(note.id, {
-          ...note,
-          synced: false // Mark as not synced
-        });
-        toast.success("Note updated successfully");
-      } else {
-        // Add new note
-        await db.notes.add({
-          ...note,
-          synced: false // Mark as not synced
-        });
-        toast.success("Note created successfully");
-      }
-      setShowForm(false);
-      setNoteToEdit(undefined);
-    } catch (error) {
-      console.error("Error saving note:", error);
-      toast.error("Failed to save note");
-    }
+    navigate(`/edit-note/${note.id}`);
   };
 
   const handleDeleteNote = async (id: number) => {
@@ -72,11 +44,6 @@ const Index = () => {
       console.error("Error deleting note:", error);
       toast.error("Failed to delete note");
     }
-  };
-
-  const handleCancelForm = () => {
-    setShowForm(false);
-    setNoteToEdit(undefined);
   };
 
   const handlePushToServer = async () => {
@@ -124,30 +91,26 @@ return (
         <header className="mb-8">
             <div className="flex justify-between items-center">          
                 <div className="flex items-center space-x-3">
-                    {!showForm && (
-                        <>
-                            <button
-                                onClick={handlePushToServer}
-                                disabled={isSyncing}
-                                className="btn btn-secondary btn-sm inline-flex items-center gap-2"
-                                title="Push notes to server"
-                            >
-                                <Upload size={18} />
-                                <span className="hidden sm:inline">Push to Server</span>
-                            </button>
-                            <button
-                                onClick={handlePullFromServer}
-                                disabled={isSyncing}
-                                className="btn btn-secondary btn-sm inline-flex items-center gap-2"
-                                title="Pull notes from server"
-                            >
-                                <Download size={18} />
-                                <span className="hidden sm:inline">Pull from Server</span>
-                            </button>
-                        </>
-                    )}
+                    <button
+                        onClick={handlePushToServer}
+                        disabled={isSyncing}
+                        className="btn btn-secondary btn-sm inline-flex items-center gap-2"
+                        title="Push notes to server"
+                    >
+                        <Upload size={18} />
+                        <span className="hidden sm:inline">Push to Server</span>
+                    </button>
+                    <button
+                        onClick={handlePullFromServer}
+                        disabled={isSyncing}
+                        className="btn btn-secondary btn-sm inline-flex items-center gap-2"
+                        title="Pull notes from server"
+                    >
+                        <Download size={18} />
+                        <span className="hidden sm:inline">Pull from Server</span>
+                    </button>
                     
-                    {notes.length > 0 && !showForm && (
+                    {notes.length > 0 && (
                         <button
                             onClick={handleAddNote}
                             className="btn btn-primary btn-sm inline-flex items-center gap-2"
@@ -158,30 +121,32 @@ return (
                     )}
                 </div>
                 
-                <button
-                    onClick={
-                        () => {
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => navigate('/profile')}
+                        className="btn btn-ghost btn-sm inline-flex items-center gap-2"
+                        title="My Profile"
+                    >
+                        <User size={18} />
+                        <span className="hidden sm:inline">Profile</span>
+                    </button>
+                    
+                    <button
+                        onClick={() => {
                             db.signOut();
                             Cookies.remove("findit_auth");
                             window.location.href = "/";
-                    }}
-                    className="btn btn-error btn-outline"
-                >
-                    Logout
-                </button>
+                        }}
+                        className="btn btn-error btn-outline btn-sm"
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
         </header>
 
         <main className="mb-12">
-            {showForm ? (
-                <div className="glass-card rounded-xl p-6 shadow-sm">
-                    <NoteForm
-                        noteToEdit={noteToEdit}
-                        onSave={handleSaveNote}
-                        onCancel={handleCancelForm}
-                    />
-                </div>
-            ) : notes.length === 0 ? (
+            {notes.length === 0 ? (
                 <EmptyState onCreateNew={handleAddNote} />
             ) : (
                 <NoteList
