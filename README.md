@@ -7,10 +7,11 @@ To run this repository, you will need :
 - Google Chrome
 
 TODO :
-- installable on mobile as progressive web app
+- installable as progressive web app
+- works on mobile
 - items can be queried
-- add photo upload
+- add photo upload, add photo to DB
 - add creator username for every item
-- make mobile-first
-- manage RLS on supabase
-- normalize items.csv (exported from google sheets) and add to supabase, with corresponding Prisma, TypeScript interface and React component
+- manage Row Level Security on supabase
+- export items.csv from google sheets, normalize and add to supabase
+- add Terraform or pulumi to manage database from code
