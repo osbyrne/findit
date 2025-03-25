@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import {Index} from "@/pages/Index";
+import {Dashboard} from "@/pages/Dashboard";
 import { SignIn}  from "@/pages/SignIn";
 import {NotFound} from "@/pages/NotFound";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ const App = () => (
             path="/" 
             element={
               <ProtectedRoute>
-                <Index />
+                <Dashboard />
               </ProtectedRoute>
             } 
           />

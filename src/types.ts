@@ -1,3 +1,4 @@
+
 interface Note {
     id: number;
     title: string;
@@ -8,4 +9,15 @@ interface Note {
     serverNoteId: string;
     userId: string;
 }
-export type { Note };
+
+interface UserProfile {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
+    notes: Note[];
+}
+
+export type { Note, UserProfile };

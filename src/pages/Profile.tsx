@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, ArrowLeft } from 'lucide-react';
+import { User } from 'lucide-react';
 import { db } from '@/database/dexie';
-import { ProfileCard } from '@/components/ProfileCard';
 import { toast } from 'sonner';
 import Cookies from 'js-cookie';
 
@@ -39,7 +38,6 @@ const Profile: React.FC = () => {
         setIsLoading(true);
         
         const formData = new FormData(e.currentTarget);
-        const currentPassword = formData.get("currentPassword") as string;
         const newPassword = formData.get("newPassword") as string;
         const confirmPassword = formData.get("confirmPassword") as string;
         
