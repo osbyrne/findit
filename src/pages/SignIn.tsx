@@ -103,13 +103,7 @@ const handleSignedIn = (userData: UserData): void => {
       <AuthForm onSignedIn={handleSignedIn} />
   
       <div className="mt-8 text-center text-sm text-base-content/60">
-        <p>Demo credentials for testing:</p>
-        <p className="font-mono bg-base-200 p-2 rounded mt-1">
-          demo@example.com
-        </p>
-        <p className="font-mono bg-base-200 p-2 rounded mt-1">
-          password123
-        </p>
+        <p>Use the buttons above to auto-fill test credentials</p>
       </div>
     </div>
   );

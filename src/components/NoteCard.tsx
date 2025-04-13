@@ -24,7 +24,7 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
 
     return (
         <div
-            className="note-card rounded-xl p-6 w-full animate-in"
+            className="note-card rounded-xl p-6 w-full animate-in bg-background border border-border shadow-sm hover:shadow-md transition-shadow"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
         >
