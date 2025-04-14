@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { PlusCircle, Upload, Download, User, Database } from "lucide-react";
+import { PlusCircle, Upload, Download, User } from "lucide-react";
 import { db, Note } from "@/database/dexie";
 import { NoteList } from "@/components/NoteList";
 import { EmptyState } from "@/components/EmptyState";
-import { PgNotesList } from "@/components/PgNotesList";
-import { initPgLite } from "@/database/pglite";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
-    const [pgLiteInitialized, setPgLiteInitialized] = useState(false);
     const navigate = useNavigate();
 
     // Fetch all notes sorted by updatedAt descending
@@ -30,27 +27,6 @@ const Dashboard = () => {
             setIsInitialLoad(false);
         }
     }, [notes, isInitialLoad]);
-
-    // Initialize PgLite when the component mounts
-    useEffect(() => {
-        const initializePgLite = async () => {
-            try {
-                const initialized = await initPgLite();
-                setPgLiteInitialized(initialized);
-                if (initialized) {
-                    console.log('PgLite initialized in Dashboard');
-                } else {
-                    console.error('Failed to initialize PgLite in Dashboard');
-                }
-            } catch (error: unknown) {
-                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-                console.error('Error initializing PgLite:', errorMessage);
-                setPgLiteInitialized(false);
-            }
-        };
-
-        initializePgLite();
-    }, []);
 
     const handleAddNote = () => {
         navigate("/add-note");
@@ -182,20 +158,11 @@ const Dashboard = () => {
                             onDelete={handleDeleteNote}
                         />
                     )}
-                    
-                    {/* PgLite Notes */}
-                    {db.currentUser?.email && (
-                        <PgNotesList userId={db.currentUser.email} />
-                    )}
                 </div>
             </main>
             <footer className="text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                     <span>Current user: {db.currentUser?.email || 'Not logged in'}</span>
-                    <span className="flex items-center gap-1">
-                        <Database size={14} />
-                        PgLite: {pgLiteInitialized ? 'Active' : 'Inactive'}
-                    </span>
                 </div>
             </footer>
         </div>
