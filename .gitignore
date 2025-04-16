@@ -1,19 +1,9 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-# Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,deno,dotenv,linux,node,react
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,deno,dotenv,linux,node,react
-
-### Deno ###
-/.idea/
-/.vscode/
-
-/node_modules
-
-.env
-*.orig
-*.pyc
-*.swp
+# Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,react,node,linux,dotenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,react,node,linux,dotenv
 
 ### dotenv ###
+.env
 
 ### Linux ###
 *~
@@ -227,7 +217,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,deno,dotenv,linux,node,react
+# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,react,node,linux,dotenv
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
