@@ -5,6 +5,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			// see https://marketplace.visualstudio.com/items/?itemName=oven.bun-vscode#vscodelaunch.json
 			"type": "chrome",
 			"request": "launch",
 			"name": "Launch Chrome against localhost",
