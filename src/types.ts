@@ -8,6 +8,7 @@ interface Note {
     synced: boolean;
     serverNoteId: string;
     userId: string;
+    image: string;
 }
 
 interface UserProfile {
