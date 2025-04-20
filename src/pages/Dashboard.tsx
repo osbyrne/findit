@@ -110,12 +110,6 @@ const Dashboard = () => {
                 </div>
             </main>
 
-            <footer className="text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                    <span>Current user: {db.currentUser?.email || 'Not logged in'}</span>
-                </div>
-            </footer>
-
             {/* Mobile-first fixed bottom action bar */}
             <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border shadow-lg flex justify-around items-center p-3 z-10">
                 <button
