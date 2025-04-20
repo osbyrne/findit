@@ -1,6 +1,7 @@
 {
     "display_override": [
-        "window-controls-overlay"
+        "window-controls-overlay",
+        "minimal-ui"
     ],
     "protocol_handlers": [
         {}
