@@ -7,8 +7,9 @@ To run this repository, you will need :
 - Google Chrome
 
 TODO :
-- installable as progressive web app
-- works on mobile
+- change PWA title from 'findit' to 'Findit'
+- change PWA icon from default to the emoji (see Google Drive)
+- UI for mobile-first: bottom row buttons, narrrow UI
 - items can be queried
 - add photo upload, add photo to DB
 - add creator username for every item
