@@ -10,14 +10,17 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', '*.png'],
+      includeAssets: ['favicon.ico', 'icons/*.png'],
       manifest: {
         name: 'FindIt',
         short_name: 'FindIt',
-        description: 'Looking for something?',
+        description: 'Find medical items in hazardous storage rooms',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
+        start_url: '/',
+        scope: '/',
+        orientation: 'any',
         icons: [
           {
             src: 'icons/pwa-192x192.png',
@@ -81,7 +84,8 @@ export default defineConfig({
         ]
       },
       devOptions: {
-        enabled: true
+        enabled: true,
+        type: 'module'
       }
     })
   ],
