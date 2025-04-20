@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { PlusCircle, Upload, Download, User } from "lucide-react";
+import { PlusCircle, Upload, Download, User, LogOut } from "lucide-react";
 import { db, Note } from "@/database/dexie";
 import { NoteList } from "@/components/NoteList";
 import { EmptyState } from "@/components/EmptyState";
@@ -80,6 +80,12 @@ const Dashboard = () => {
         }
     };
 
+    const handleSignOut = () => {
+        db.signOut();
+        Cookies.remove("findit_auth");
+        window.location.href = "/";
+    };
+
     if (!notes) {
         return (
             <div className="flex justify-center items-center min-h-[70vh]">
@@ -89,64 +95,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="container max-w-6xl py-12 px-4 sm:px-6 lg:px-8 mx-auto min-h-screen">
-            <header className="mb-8">
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-3">
-                        <button
-                            onClick={handlePushToServer}
-                            disabled={isSyncing}
-                            className="btn btn-secondary btn-sm inline-flex items-center gap-2"
-                            title="Push notes to server"
-                        >
-                            <Upload size={18} />
-                            <span className="hidden sm:inline">Push to Server</span>
-                        </button>
-                        <button
-                            onClick={handlePullFromServer}
-                            disabled={isSyncing}
-                            className="btn btn-secondary btn-sm inline-flex items-center gap-2"
-                            title="Pull notes from server"
-                        >
-                            <Download size={18} />
-                            <span className="hidden sm:inline">Pull from Server</span>
-                        </button>
-
-                        {notes.length > 0 && (
-                            <button
-                                onClick={handleAddNote}
-                                className="btn btn-primary btn-sm inline-flex items-center gap-2"
-                            >
-                                <PlusCircle size={18} />
-                                <span>New Note</span>
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => navigate('/profile')}
-                            className="btn btn-ghost btn-sm inline-flex items-center gap-2"
-                            title="My Profile"
-                        >
-                            <User size={18} />
-                            <span className="hidden sm:inline">Profile</span>
-                        </button>
-
-                        <button
-                            onClick={() => {
-                                db.signOut();
-                                Cookies.remove("findit_auth");
-                                window.location.href = "/";
-                            }}
-                            className="btn btn-error btn-outline btn-sm"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                </div>
-            </header>
-
+        <div className="container max-w-6xl py-12 px-4 sm:px-6 lg:px-8 mx-auto min-h-screen pb-20">
             <main className="mb-12">
                 <div className="space-y-8">
                     {notes.length === 0 ? (
@@ -160,11 +109,57 @@ const Dashboard = () => {
                     )}
                 </div>
             </main>
+
             <footer className="text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                     <span>Current user: {db.currentUser?.email || 'Not logged in'}</span>
                 </div>
             </footer>
+
+            {/* Mobile-first fixed bottom action bar */}
+            <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border shadow-lg flex justify-around items-center p-3 z-10">
+                <button
+                    onClick={handleAddNote}
+                    className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md hover:shadow-lg transition-shadow"
+                    title="Add Note"
+                >
+                    <PlusCircle size={24} />
+                </button>
+
+                <button
+                    onClick={handlePushToServer}
+                    disabled={isSyncing}
+                    className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground disabled:opacity-50 shadow hover:shadow-md transition-shadow"
+                    title="Push to Server"
+                >
+                    <Upload size={20} />
+                </button>
+
+                <button
+                    onClick={handlePullFromServer}
+                    disabled={isSyncing}
+                    className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground disabled:opacity-50 shadow hover:shadow-md transition-shadow"
+                    title="Pull from Server"
+                >
+                    <Download size={20} />
+                </button>
+
+                <button
+                    onClick={() => navigate('/profile')}
+                    className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground shadow hover:shadow-md transition-shadow"
+                    title="Profile"
+                >
+                    <User size={20} />
+                </button>
+
+                <button
+                    onClick={handleSignOut}
+                    className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive shadow hover:shadow-md transition-shadow"
+                    title="Logout"
+                >
+                    <LogOut size={20} />
+                </button>
+            </div>
         </div>
     );
 };

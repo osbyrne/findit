@@ -10,8 +10,6 @@ interface NoteCardProps {
 }
 
 const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
-    const [isHovering, setIsHovering] = useState(false);
-
     const truncate = (text: string, length: number) => {
         if (text.length <= length) return text;
         return text.slice(0, length) + "...";
@@ -24,9 +22,7 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
 
     return (
         <div
-            className="note-card rounded-xl p-6 w-full animate-in bg-background border border-border shadow-sm hover:shadow-md transition-shadow"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            className="note-card rounded-xl p-6 w-full animate-in bg-background border border-border shadow-sm hover:shadow-md transition-shadow relative"
         >
             <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
@@ -43,22 +39,6 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
                             <Check size={16} />
                         </span>
                     )}
-                </div>
-                <div className={`flex space-x-2 transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
-                    <button
-                        onClick={() => onEdit(note)}
-                        className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-                        aria-label="Edit note"
-                    >
-                        <Edit2 size={16} />
-                    </button>
-                    <button
-                        onClick={() => onDelete(note.id!)}
-                        className="p-1.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-muted transition-all"
-                        aria-label="Delete note"
-                    >
-                        <Trash2 size={16} />
-                    </button>
                 </div>
             </div>
 
@@ -80,8 +60,28 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
                 {truncate(note.content, 150)}
             </p>
 
-            <div className="text-xs text-muted-foreground flex items-center mt-auto">
-                <span>Updated {formattedDate}</span>
+            <div className="flex justify-between items-center mt-auto">
+                <span className="text-xs text-muted-foreground">Updated {formattedDate}</span>
+
+                {/* Mobile-first action buttons in bottom row */}
+                <div className="flex space-x-2">
+                    <button
+                        onClick={() => onEdit(note)}
+                        className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Edit note"
+                        title="Edit"
+                    >
+                        <Edit2 size={16} />
+                    </button>
+                    <button
+                        onClick={() => onDelete(note.id!)}
+                        className="w-9 h-9 rounded-full bg-destructive/10 flex items-center justify-center text-destructive transition-colors"
+                        aria-label="Delete note"
+                        title="Delete"
+                    >
+                        <Trash2 size={16} />
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Image, Trash } from "lucide-react";
+import { X, Image, Trash, Save, ArrowLeft } from "lucide-react";
 import { Note } from "@/types";
 import { toast } from "sonner";
 
@@ -79,14 +79,14 @@ const NoteForm = ({ noteToEdit, onSave, onCancel }: NoteFormProps) => {
                 </h2>
                 <button
                     onClick={onCancel}
-                    className="p-2 rounded-full hover:bg-muted transition-colors"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
                     aria-label="Close form"
                 >
                     <X size={20} />
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 pb-20">
                 <div className="space-y-2">
                     <label htmlFor="title" className="block text-sm font-medium">
                         Title
@@ -107,9 +107,8 @@ const NoteForm = ({ noteToEdit, onSave, onCancel }: NoteFormProps) => {
                         Image
                     </label>
                     <div className="flex items-center gap-2">
-                        <label className="btn btn-secondary btn-sm cursor-pointer">
-                            <Image size={16} className="mr-2" />
-                            {image ? 'Change Image' : 'Upload Image'}
+                        <label className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground cursor-pointer shadow hover:shadow-md transition-shadow">
+                            <Image size={20} />
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -118,14 +117,15 @@ const NoteForm = ({ noteToEdit, onSave, onCancel }: NoteFormProps) => {
                                 className="hidden"
                             />
                         </label>
+
                         {image && (
                             <button
                                 type="button"
                                 onClick={handleRemoveImage}
-                                className="btn btn-outline btn-error btn-sm"
+                                className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive shadow hover:shadow-md transition-shadow"
+                                title="Remove image"
                             >
-                                <Trash size={16} className="mr-2" />
-                                Remove
+                                <Trash size={20} />
                             </button>
                         )}
                     </div>
@@ -155,19 +155,23 @@ const NoteForm = ({ noteToEdit, onSave, onCancel }: NoteFormProps) => {
                     />
                 </div>
 
-                <div className="flex justify-end gap-3">
+                {/* Mobile-first fixed bottom action bar */}
+                <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border shadow-lg flex justify-around items-center p-3 z-10">
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="btn-secondary"
+                        className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground shadow hover:shadow-md transition-shadow"
+                        title="Cancel"
                     >
-                        Cancel
+                        <ArrowLeft size={20} />
                     </button>
+
                     <button
                         type="submit"
-                        className="btn-primary"
+                        className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md hover:shadow-lg transition-shadow"
+                        title={isEditing ? "Update" : "Save"}
                     >
-                        {isEditing ? "Update" : "Save"}
+                        <Save size={20} />
                     </button>
                 </div>
             </form>
