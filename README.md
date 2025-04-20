@@ -7,6 +7,8 @@ To run this repository, you will need :
 - Google Chrome
 
 TODO :
+- make notifications fir the screen
+- make notifications "slide to dismiss"
 - change PWA title from 'findit' to 'Findit'
 - change PWA icon from default to the emoji (see Google Drive)
 - UI for mobile-first: bottom row buttons, narrrow UI

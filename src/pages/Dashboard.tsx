@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { PlusCircle, Upload, Download, User, LogOut } from "lucide-react";
+import { PlusCircle, Upload, Download, User, LogOut, SettingsIcon } from "lucide-react";
 import { db, Note } from "@/database/dexie";
 import { NoteList } from "@/components/NoteList";
 import { EmptyState } from "@/components/EmptyState";
@@ -144,6 +144,14 @@ const Dashboard = () => {
                     title="Profile"
                 >
                     <User size={20} />
+                </button>
+
+                <button
+                    onClick={() => navigate('/settings')}
+                    className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground shadow hover:shadow-md transition-shadow"
+                    title="Settings"
+                >
+                    <SettingsIcon size={20} />
                 </button>
 
                 <button

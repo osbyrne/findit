@@ -34,11 +34,7 @@ const NoteCard = ({ note, onEdit, onDelete }: NoteCardProps) => {
                             <CloudOff size={16} />
                         </span>
                     )}
-                    {note.synced === true && (
-                        <span title="Synced with server" className="text-green-500">
-                            <Check size={16} />
-                        </span>
-                    )}
+                    {/* The check icon for synced notes has been removed */}
                 </div>
             </div>
 
