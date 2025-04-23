@@ -1,5 +1,4 @@
-
-interface Note {
+export interface Note {
     id: number;
     title: string;
     content: string;
@@ -11,7 +10,7 @@ interface Note {
     image: string;
 }
 
-interface UserProfile {
+export interface UserProfile {
     id: number;
     name: string;
     email: string;
@@ -20,5 +19,3 @@ interface UserProfile {
     updatedAt: Date;
     notes: Note[];
 }
-
-export type { Note, UserProfile };

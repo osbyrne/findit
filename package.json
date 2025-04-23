@@ -70,6 +70,7 @@
         "recharts": "^2.12.7",
         "solid-js": "^1.9.5",
         "sonner": "^1.5.0",
+        "supabase": "^2.20.12",
         "tailwind-merge": "^2.5.2",
         "tailwindcss-animate": "^1.0.7",
         "vaul": "^0.9.3",

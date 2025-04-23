@@ -1,11 +1,5 @@
 {
-	"recommendations": [
-		"oven.bun-vscode",
-		"bradlc.vscode-tailwindcss",
-		"Prisma.prisma",
-		"dbaeumer.vscode-eslint",
-		"Supabase.vscode-supabase-extension",
-		"yoavbls.pretty-ts-errors",
-		"piotrpalarz.vscode-gitignore-generator",
-	]
+  "recommendations": [
+    "denoland.vscode-deno"
+  ]
 }
